@@ -1,0 +1,26 @@
+{
+  "name": "schema-to-docs",
+  "version": "0.0.0",
+  "description": "Converts a JSON schema into human readable HTML documentation",
+  "main": "index.js",
+  "scripts": {
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/milesap/schema-to-docs.git"
+  },
+  "keywords": [
+    "json",
+    "schema"
+  ],
+  "author": "Miles Petrov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/milesap/schema-to-docs/issues"
+  },
+  "homepage": "https://github.com/milesap/schema-to-docs#readme",
+  "dependencies": {
+    "json-schema-ref-parser": "4.0.4"
+  }
+}
