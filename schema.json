@@ -305,7 +305,7 @@
                 "expanded": { "type": "boolean", "default": true },
                 "children": {
                     "type": "array",
-                    "items": { "oneOf": [ { "$ref": "#/definitions/entryGroup" }, { "$ref": "#/definitions/visibilitySet" }, { "$ref": "#/definitions/entry" }, { "$ref": "#/definitions/infoSection" } ] },
+                    "items": { "oneOf": [ { "$ref": "#/definitions/entryGroup" }, { "$ref": "#/definitions/visibilitySet" }, { "$ref": "#/definitions/entry" }] },
                     "minItems": 1
                 },
                 "controls": { "$ref": "#/definitions/legendGroupControls" },
