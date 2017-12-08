@@ -1,8 +1,6 @@
 fs = require('fs');
 const $RefParser = require('json-schema-ref-parser');
 const parser = new $RefParser();
-const circularRefs = new Set();
-const looseCircularRefs = {};
 
 class Reference {
     constructor(schema, refId) {
@@ -22,14 +20,23 @@ class Reference {
         return JSON.parse(JSON.stringify(this.ref));
     }
 
-    checkSelfReferencing() {
-        let refClone = this.clone;
-        let hasChild = this.find(refClone);
+    selfReferenceReplace(refId) {
+        const clone = this.clone;
+        let hasChild = this.find(clone, refId);
         if (hasChild) {
-            hasChild["circularSelfReferencing"] = true;
+            hasChild["#refTo"] = refId;
             delete hasChild['$ref'];
-            Object.assign(this.find(), hasChild);
+        }
+        return clone;
+    }
+
+    checkSelfReferencing() {
+        let selfRef = this.find();
+        if (selfRef) {
+            selfRef["#refTo"] = this.refId;
+            delete selfRef['$ref'];
             this.isSelfReferencing = true;
+            this.checkSelfReferencing();
         }
     }
 
@@ -40,20 +47,15 @@ class Reference {
                 const otherLinkToSelf = otherRef.find(otherRef.clone, this.refId);
 
                 if (selfLinkToOther && otherLinkToSelf) {
-
-
-                    // TODO: we need to insert sanitized clone, not just the ref.
-
-                    otherLinkToSelf["biDirectionalReferencing"] = true;
-                    delete otherLinkToSelf['$ref'];
-                    console.log(otherLinkToSelf);
-                    Object.assign(selfLinkToOther, otherLinkToSelf);
-                    this.biDirectionalTo.push(otherRef.refId);
+                    Object.assign(selfLinkToOther, otherRef.selfReferenceReplace(this.refId));
+                    delete selfLinkToOther['$ref'];
+                    selfLinkToOther['#refTo'] = otherRef.refId;
+                    this.checkBidirectional();
                 }
         });
     }
 
-    find(currentPosition = this.ref, refId = this.refId) {
+    find(currentPosition = this.ref, refId = this.refId, refPropName = '$ref') {
         let result = null;
         // search through arrays which may contain reference objects
         if (currentPosition instanceof Array) {
@@ -65,7 +67,7 @@ class Reference {
             }
         } else {
             for(const prop in currentPosition) {
-                if(currentPosition[prop] === refId) {
+                if(currentPosition[prop] === refId && prop === refPropName) {
                     return currentPosition;
                 }
                 if(currentPosition[prop] instanceof Object || currentPosition[prop] instanceof Array) {
@@ -95,9 +97,17 @@ class Schema {
         }
 
         this.schema = schema;
-        this.dereference().then(() => {
+    }
 
-            //console.log(JSON.stringify(this.schema))
+    convert() {
+        return this.dereference().then(() => {
+            return parser.dereference(this.schema, { dereference: { circular: "ignore" }}).then(schema => {
+                this.schema = schema;
+                //console.log(JSON.stringify(schema));
+                var transformer = require('../node_modules/json-schema-example-loader/lib/transformer.js');
+                var transformedSchema = transformer.transformSchema(this.schema);
+                console.log(JSON.stringify(transformedSchema, null, 2));
+            });
         });
     }
 
@@ -125,6 +135,6 @@ class Schema {
     }
 }
 
-
-
 const a = new Schema('./schema.json');
+a.convert();
+
