@@ -4,7 +4,7 @@
   "description": "Converts a JSON schema into human readable HTML documentation",
   "main": "index.js",
   "scripts": {
-
+    "start": "browserify src/index.js -o index.js && http-server"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,10 @@
   },
   "homepage": "https://github.com/milesap/schema-to-docs#readme",
   "dependencies": {
-    "json-schema-example-loader": "^3.0.0",
-    "json-schema-ref-parser": "4.0.4"
+    "browserify": "14.5.0",
+    "http-server": "0.10.0",
+    "json-schema-ref-parser": "4.0.4",
+    "loader-utils": "0.2.15",
+    "lodash": "3.10.0"
   }
 }

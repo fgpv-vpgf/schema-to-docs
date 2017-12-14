@@ -1,4 +1,3 @@
-fs = require('fs');
 const $RefParser = require('json-schema-ref-parser');
 const parser = new $RefParser();
 
@@ -86,17 +85,19 @@ class Schema {
     constructor(schema) {
         this.circularReferences = {};
 
-        if (typeof schema === 'string') {
+        if (schema) {
             try {
-                JSON.parse(schema);
+                this.schema = JSON.parse(schema);
             } catch (e) {
-                schema = JSON.parse(fs.readFileSync(schema, 'utf8'));
+                throw new Error('Only pass valid JSON to constructor, use load method for URLs');
             }
-        } else if (typeof schema !== 'object') {
-            throw new Error('Schema provided is invalid');
         }
+    }
 
-        this.schema = schema;
+    load(schemaUrl) {
+        return $.getJSON(schemaUrl, schema => {
+            this.schema = schema;
+        });
     }
 
     convert() {
@@ -104,12 +105,21 @@ class Schema {
             return parser.dereference(this.schema, { dereference: { circular: "ignore" }}).then(schema => {
                 this.schema = schema;
                 //console.log(JSON.stringify(schema));
-                var transformer = require('../node_modules/json-schema-example-loader/lib/transformer.js');
-                var transformedSchema = transformer.transformSchema(this.schema);
-                console.log(JSON.stringify(transformedSchema, null, 2));
+                var transformer = require('../libs/exemplary-schema/transformer.js');
+                return transformer.transformSchema(this.schema);
+                //console.log(JSON.stringify(transformedSchema, null, 2));
             });
         });
     }
+
+    render() {
+        return this.convert().then(schema => {
+            const ObjectRenderer = require('./object.renderer');
+            return (new ObjectRenderer(schema.object_definition, 'all_props', true)).render();
+        });
+    }
+
+
 
     getReferences(excludeRefId = false) {
         return Object.keys(this.circularReferences)
@@ -135,6 +145,5 @@ class Schema {
     }
 }
 
-const a = new Schema('./schema.json');
-a.convert();
 
+window.Schema = Schema;

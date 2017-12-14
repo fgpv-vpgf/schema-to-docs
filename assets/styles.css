@@ -1,0 +1,51 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+li {
+    padding: 5px;
+    display: none;
+}
+
+li.desc {
+    padding-left: 15px;
+    font-weight: 800;
+}
+
+code.hljs{
+    max-height: 500px;
+}
+
+li.object div.header {
+    display: inline;
+    cursor: pointer;
+}
+
+div.svg {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+}
+
+div.svg svg {
+    transition: 200ms linear all;
+}
+
+div.svg.open svg {
+    transition: 200ms linear all;
+    transform: rotate(0.25turn);
+}
+
+div.modal-body {
+    padding: 0;
+    margin-bottom: -14px;
+}
+
+div.modal-body li {
+    display: block;
+    padding: 0;
+}
+
+span.array {
+    font-family: 'Cutive Mono', monospace;
+}
