@@ -6,7 +6,7 @@ class StringRenderer extends BaseRenderer {
     }
 
     render() {
-        return parseInt(this.item) >= 0 ? `<li>${this.item}</li>` : `<li>${this.name} : ${this.item}</li>`;
+        return this.item ? parseInt(this.item) >= 0 ? `<li>${this.item}</li>` : `<li>${this.name} : ${this.item}</li>` : '';
     }
 }
 

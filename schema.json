@@ -743,6 +743,25 @@
                 "basemap": { "type": "object" }
             },
             "additionalProperties": false
+        },
+
+        "legend": {
+            "type": "object",
+            "properties": {
+                "reorderable": { "type": "boolean", "default": true, "description": "Specifies if the items in the legend can be reordered; structured legend ignores this property." },
+                "allowImport": { "type": "boolean", "default": true, "description": "Specifies if the user-added layers are allowed." },
+                "isOpen": {
+                    "type": "object",
+                    "description": "Specifies whether the legend is opened by default on initial loading of the map for small, medium, and large viewports",
+                    "properties": {
+                        "large": { "type": "boolean", "default": false, "description": "Whether the legend is opened by default on initial loading of the map for large viewports" },
+                        "medium": { "type": "boolean", "default": false, "description": "Whether the legend is opened by default on initial loading of the map for medium viewports" },
+                        "small": { "type": "boolean", "default": false, "description": "Whether the legend is opened by default on initial loading of the map for small viewports" }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
         }
     },
 
@@ -787,22 +806,7 @@
                     "additionalProperties": false
                 },
                 "legend": {
-                    "type": "object",
-                    "properties": {
-                        "reorderable": { "type": "boolean", "default": true, "description": "Specifies if the items in the legend can be reordered; structured legend ignores this property." },
-                        "allowImport": { "type": "boolean", "default": true, "description": "Specifies if the user-added layers are allowed." },
-                        "isOpen": {
-                            "type": "object",
-                            "description": "Specifies whether the legend is opened by default on initial loading of the map for small, medium, and large viewports",
-                            "properties": {
-                                "large": { "type": "boolean", "default": false, "description": "Whether the legend is opened by default on initial loading of the map for large viewports" },
-                                "medium": { "type": "boolean", "default": false, "description": "Whether the legend is opened by default on initial loading of the map for medium viewports" },
-                                "small": { "type": "boolean", "default": false, "description": "Whether the legend is opened by default on initial loading of the map for small viewports" }
-                            },
-                            "additionalProperties": false
-                        }
-                    },
-                    "additionalProperties": false
+                    "$ref": "#/definitions/legend"
                 },
                 "tableIsOpen": {
                     "type": "object",

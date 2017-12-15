@@ -13,20 +13,22 @@ class ArrayRenderer extends BaseRenderer {
         }
 
         let renderHTML = this.renderSingle() || this.allStrings();
-        if (!renderHTML) {
-            renderHTML =  this.items.map((_, i) => super.render(this.items, i)).join(' ');
-        }
 
-        return `<li>${this.name} : [<ul class="array">${renderHTML}</ul>]</li>`;
+        if (renderHTML) {
+            return renderHTML;
+        } else {
+            renderHTML =  this.items.map((_, i) => super.render(this.items, i)).join(' ');
+            return `<li>${this.name} : [<ul class="array">${renderHTML}</ul>]</li>`;
+        }
     }
 
     renderSingle() {
-        return this.items.length === 1 ? super.render(this.items, 0) : false;
+        return this.items.length === 1 ? `<li>${this.name} : [${this.items[0]}]</li>` : false;
     }
 
     allStrings() {
         if (this.items.every(i => typeof i === 'string')) {
-            return this.items.map(item => super.render(this.items, item)).join(', ');
+            return `<li>${this.name} : [${this.items.join(', ')}]</li>`;
         } else {
             return false;
         }

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>#{title}</title>
+<title>Config Schema</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -43,6 +43,8 @@
 <script src="index.js"></script>
 
 <script>
+
+
     function toggle(elem) {
         elem = $(elem);
         const nextElem = elem.siblings('ul').find('> li, li > ul.array > li');
@@ -56,10 +58,18 @@
         }
     }
 
-
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
 
     const a = new Schema();
-    a.load('./schema.json').then(() => {
+    a.load(`https://raw.githubusercontent.com/fgpv-vpgf/fgpv-vpgf/${getParameterByName('v') || 'develop'}/schema.json`).then(() => {
         a.render().then(html => {
             $('#schema-body').html(html);
             hljs.initHighlightingOnLoad();

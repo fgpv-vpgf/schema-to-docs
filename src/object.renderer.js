@@ -9,7 +9,7 @@ class ObjectRenderer extends BaseRenderer {
         this.properties = Object.keys(this.item);
         this.properties = sort(this.properties).map(this.propertyChange.bind(this)).filter(p => p);
 
-        this.type = this.item.type;
+        this.type = this.item.type || 'object';
         delete this.item.type;
     }
 
