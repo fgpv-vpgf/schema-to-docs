@@ -1,2 +1,2 @@
 # schema-to-docs
-Converts a JSON schema into human readable HTML documentation
+Converts a JSON schema into an interactive, readable HTML document.
